@@ -339,6 +339,7 @@ std::unique_ptr<MinecraftInstance> ModrinthCreationTask::createInstance()
     QEventLoop ensureMetaLoop;
     QDir folder = FS::PathCombine(instance->modsRoot(), ".index");
     auto ensureMetadataTask = makeShared<EnsureMetadataTask>(resources, folder, ModPlatform::ResourceProvider::MODRINTH);
+    ensureMetadataTask->setUpdateLock(true);
     connect(ensureMetadataTask.get(), &Task::succeeded, this, [&endedWell]() { endedWell = true; });
     connect(ensureMetadataTask.get(), &Task::finished, &ensureMetaLoop, &QEventLoop::quit);
     connect(ensureMetadataTask.get(), &Task::progress, [this](qint64 current, qint64 total) {
